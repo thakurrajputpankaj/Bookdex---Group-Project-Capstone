@@ -1,5 +1,3 @@
-Certainly! Here's an improved and readable version of your README file for GitHub:
-
 ---
 
 # Bookdex - Group Project Capstone
