@@ -18,30 +18,24 @@ BookDex: A user-friendly app for managing your book collection. Easily explore, 
 
 **Features of Our App:**
 1. **Browse Books:**
-   Explore a diverse collection of books directly from the app.
+   Explore a diverse collection of books directly from the app. The app uses Google Books Api for getting the list of Books.
 
-2. **Wishlist:**
-   Create and manage a wishlist of books you plan to read or acquire.
+2. **Favourites a book:**
+   Create and manage a Favourites section of books. The uses Firebase database to store the details of the favourite books.
 
-3. **Filtering Books:**
-   Easily find specific books by applying filters based on genres, authors, or other criteria.
-
-4. **Sorting Books:**
-   Organize your book collection by sorting them based on various parameters like title, author, or publication date.
+3. **Searching Books:**
+   Easily find specific books by searching the book's name in the search bar
 
 5. **Notifications:**
-   Receive timely notifications whenever new books are added to the app, keeping you updated on the latest additions.
+   Add Daily reminders of the books reading.
 
-6. **User Reviews and Ratings:**
-   Engage with the community by sharing your thoughts through reviews and ratings, and read others' opinions on books.
+6. **Dark Mode:**
+   App uses dark mode
 
-7. **Offline Reading Mode:**
-   Download your favorite books for offline reading, ensuring access even without an internet connection.
+7. **Currently Reading:**
+   User can add the book to currently reading section where he can change the number of pages.
 
-8. **Audiobook Support:**
-   In addition to physical books, include options for purchasing or renting e-books and audiobooks.
-
-9. **Live Chat Support:**
-   Implement a live chat feature for instant customer support, helping users with queries or issues they might face.
-
+8. **Daily Book Quotes:**
+   The app uses API to fetch radmon quotes related to books, reading habits.
+   
 ---
