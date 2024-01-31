@@ -25,6 +25,9 @@ BookDex: A user-friendly app for managing your book collection. Easily explore, 
 
 3. **Searching Books:**
    Easily find specific books by searching the book's name in the search bar
+   
+4. **Displaying the Stats of users's activity in the app:**
+   App displays users' number of favourite books, number of pages that user has read, number of books he has read till now.
 
 5. **Notifications:**
    Add Daily reminders of the books reading.
