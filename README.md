@@ -36,6 +36,6 @@ BookDex: A user-friendly app for managing your book collection. Easily explore, 
    User can add the book to currently reading section where he can change the number of pages.
 
 8. **Daily Book Quotes:**
-   The app uses API to fetch randon quotes related to books, reading habits.
+   The app uses API to fetch random quotes related to books, reading habits.
    
 ---
