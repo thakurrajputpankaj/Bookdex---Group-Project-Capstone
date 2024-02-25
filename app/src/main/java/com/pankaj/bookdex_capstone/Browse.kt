@@ -64,7 +64,7 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
                 }
 
                 R.id.nav_notification -> {
-                    //val intent = Intent(this, NotificationActivity::class.java)
+                    val intent = Intent(this, NotificationActivity::class.java)
                     startActivity(intent)
                     drawerLayout.closeDrawer(GravityCompat.START)
                     true
