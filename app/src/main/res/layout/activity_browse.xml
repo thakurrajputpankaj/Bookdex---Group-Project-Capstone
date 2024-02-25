@@ -1,61 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:id="@+id/drawer_layout"
     tools:context=".Browse">
 
+    <FrameLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/drawer_menu" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:weightSum="5"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
         >
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardElevation="4dp"
-            android:padding="20dp"
-            app:cardCornerRadius="24dp"
-            android:layout_weight="4"
-            android:layout_margin="5dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:weightSum="5"
             >
 
-            <EditText
-                android:id="@+id/search_edittext"
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/hamburger"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/menu"
+                android:layout_margin="5dp"
+                />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/find_books"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:padding="15dp"
-                android:background="@drawable/no_underline_background" />
-        </com.google.android.material.card.MaterialCardView>
+                app:cardElevation="4dp"
+                android:padding="20dp"
+                app:cardCornerRadius="24dp"
+                android:layout_weight="3"
+                android:layout_margin="5dp"
+                >
+
+                <EditText
+                    android:id="@+id/search_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/find_books"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:padding="15dp"
+                    android:background="@drawable/no_underline_background" />
+            </com.google.android.material.card.MaterialCardView>
 
 
-        <ImageView
-            android:id="@+id/search"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/ic_search"
-            android:layout_margin="5dp"
-             />
+            <ImageView
+                android:id="@+id/search"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_search"
+                android:layout_margin="5dp"
+                />
 
+        </LinearLayout>
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/books_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
     </LinearLayout>
 
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/books_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-</LinearLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

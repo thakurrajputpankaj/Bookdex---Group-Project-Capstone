@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "688887999797",
+    "project_id": "bookdex-capstone",
+    "storage_bucket": "bookdex-capstone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:688887999797:android:ae587f2a0401a56623307c",
+        "android_client_info": {
+          "package_name": "com.pankaj.bookdex_capstone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIraRkQRm7JfY1HsO1N2AY4NaOPQzciQ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
