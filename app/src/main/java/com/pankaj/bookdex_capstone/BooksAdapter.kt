@@ -1,11 +1,13 @@
 package com.pankaj.bookdex_capstone
 
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.pankaj.bookdex_capstone.R
@@ -31,20 +33,26 @@ class BooksAdapter(private val books: List<BookItem>, private val listener: OnIt
     }
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
-        val book = books[position].volumeInfo
-        holder.textViewTitle.text = book.title
-        holder.textViewAuthor.text = book.authors?.joinToString(", ") ?: "Author Unknown"
-        Picasso.get()
-            .load(book.imageLinks?.thumbnail)
-            .placeholder(R.drawable.placeholder)
-            .error(R.drawable.placeholder)
-            .into(holder.imageViewThumbnail)
+        if (books.isEmpty()) {
+            holder.textViewTitle.text = "No Results Found"
+            holder.textViewAuthor.text = ""
+            holder.imageViewThumbnail.visibility = View.GONE
+            holder.buttonFavourites.visibility = View.GONE
+        } else {
+            val book = books[position].volumeInfo
+            holder.textViewTitle.text = book.title
+            holder.textViewAuthor.text = book.authors?.joinToString(", ") ?: "Author Unknown"
+            Picasso.get()
+                .load(book.imageLinks?.thumbnail)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
+                .into(holder.imageViewThumbnail)
 
-        holder.buttonFavourites.setOnClickListener{
-            listener.onItemClick(books[position])
+            holder.buttonFavourites.setOnClickListener{
+                listener.onItemClick(books[position])
+            }
         }
-
     }
 
-    override fun getItemCount() = books.size
+    override fun getItemCount() = if (books.isEmpty()) 1 else books.size
 }

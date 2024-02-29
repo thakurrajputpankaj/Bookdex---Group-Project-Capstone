@@ -27,7 +27,7 @@ class FavouritesActivity : AppCompatActivity() , FavouritesAdapter.OnItemClickLi
 
         databaseReference = FirebaseDatabase.getInstance().reference.child("favourites")
 
-        adapter = FavouritesAdapter(mutableListOf(), this)
+        adapter = FavouritesAdapter(mutableListOf(), this, this)
 
         recyclerView.adapter = adapter
 
@@ -60,7 +60,6 @@ class FavouritesActivity : AppCompatActivity() , FavouritesAdapter.OnItemClickLi
     companion object {
         private const val TAG = "FavouritesActivity"
     }
-
 
     override fun onItemClick(favourite: Favourite) {
         val favouriteId = favourite.id

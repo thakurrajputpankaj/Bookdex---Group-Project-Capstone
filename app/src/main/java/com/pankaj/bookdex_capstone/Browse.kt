@@ -1,12 +1,16 @@
 package com.pankaj.bookdex_capstone
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
@@ -74,7 +78,12 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
         }
 
         search.setOnClickListener{
-            fetchBooks(search_edittext.text.toString())
+            val query = search_edittext.text.toString().trim()
+            if (query.isNotEmpty()) {
+                fetchBooks(query)
+            } else {
+                Toast.makeText(this, "Please enter a search query", Toast.LENGTH_SHORT).show()
+            }
         }
         fetchBooks("Kotlin programming")
     }
@@ -107,17 +116,40 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(book: BookItem) {
-        val bookData = mapOf(
-            "title" to book.volumeInfo.title,
-            "author" to (book.volumeInfo.authors?.joinToString(", ") ?: "Author Unknown"),
-            "image" to book.volumeInfo.imageLinks?.thumbnail
-        )
-
-        databaseReference.push().setValue(bookData)
-
-        Toast.makeText(this, "Book saved to Firebase Database", Toast.LENGTH_SHORT).show()
+        showRemoveConfirmationDialog(book)
     }
 
+    private fun showRemoveConfirmationDialog(book: BookItem) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.apply {
+            setTitle("Add to Favourites")
+            setMessage("Are you sure you want to add this to Favourites ?")
+            setPositiveButton("Yes") { _: DialogInterface, _: Int ->
+                val bookData = mapOf(
+                    "title" to book.volumeInfo.title,
+                    "author" to (book.volumeInfo.authors?.joinToString(", ") ?: "Author Unknown"),
+                    "image" to book.volumeInfo.imageLinks?.thumbnail
+                )
+                databaseReference.push().setValue(bookData)
+                showToast("Book saved to Favourites Section")
+                //Toast.makeText(this, "Book saved to Favourites Section", Toast.LENGTH_SHORT).show()
+            }
+            setNegativeButton("No") { dialog: DialogInterface, _: Int ->
+                dialog.dismiss()
+            }
+            create().show()
+        }
 
+    }
+    private fun showToast(message: String) {
+        val inflater = layoutInflater
+        val layout: View = inflater.inflate(R.layout.custom_toast_layout, findViewById(R.id.custom_toast_layout_root))
+        val text: TextView = layout.findViewById(R.id.text)
+        text.text = message
 
+        val toast = Toast(applicationContext)
+        toast.duration = Toast.LENGTH_SHORT
+        toast.view = layout
+        toast.show()
+    }
 }
