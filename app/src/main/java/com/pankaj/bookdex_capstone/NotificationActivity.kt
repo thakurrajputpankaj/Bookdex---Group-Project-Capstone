@@ -33,7 +33,7 @@ class NotificationActivity : AppCompatActivity() {
         val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val timeAtButtonClick = System.currentTimeMillis()
-        val tenSecondsInMillis = 100L
+        val tenSecondsInMillis = 10000L
 
         alarmManager.setInexactRepeating(
             AlarmManager.RTC_WAKEUP,

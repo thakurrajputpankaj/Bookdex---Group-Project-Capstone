@@ -18,5 +18,8 @@
     <color name="colorIcons">#3F51B5</color>
     <color name="grey">#535353</color>
 
+    <color name="red">#F62727</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryVariant">#303F9F</color>
 
 </resources>

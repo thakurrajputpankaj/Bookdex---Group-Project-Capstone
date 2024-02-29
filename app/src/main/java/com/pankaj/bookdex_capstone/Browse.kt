@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -31,12 +32,15 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var databaseReference: DatabaseReference
+    private lateinit var rootReference: DatabaseReference
 
     private lateinit var search: ImageView
     private lateinit var search_edittext: EditText
 
     private lateinit var hamburger : ImageView
+    private lateinit var booksAdapter: BooksAdapter
 
+    val mutableBookItems = mutableListOf<BookItem>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_browse)
@@ -49,12 +53,17 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
         search = findViewById(R.id.search)
         search_edittext = findViewById(R.id.search_edittext)
         hamburger = findViewById(R.id.hamburger)
+        rootReference = FirebaseDatabase.getInstance().reference
+
+        booksAdapter = BooksAdapter(mutableListOf(), this@Browse, rootReference)
+        recyclerView.adapter = booksAdapter
 
         hamburger.setOnClickListener{
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
         databaseReference = FirebaseDatabase.getInstance().reference.child("favourites")
+
 
         val navView: NavigationView = findViewById(R.id.nav_view)
         navView.bringToFront()
@@ -102,8 +111,10 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
         RetrofitClient.service.getBooks(query).enqueue(object : Callback<BookResponse> {
             override fun onResponse(call: Call<BookResponse>, response: Response<BookResponse>) {
                 if (response.isSuccessful) {
-                    val booksAdapter = BooksAdapter(response.body()?.items ?: listOf(), this@Browse)
-                    recyclerView.adapter = booksAdapter
+                    val bookItems = response.body()?.items ?: listOf()
+                    mutableBookItems.clear()
+                    mutableBookItems.addAll(bookItems)
+                    booksAdapter.updateDataset(mutableBookItems);
                 } else {
                     Log.e("BooksActivity", "Error: ${response.errorBody()?.string()}")
                 }
@@ -115,32 +126,84 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
         })
     }
 
-    override fun onItemClick(book: BookItem) {
-        showRemoveConfirmationDialog(book)
+
+    override fun onItemClick(book: BookItem, isFavourite: Boolean, position: Int) {
+        //Log.d("Browse", "Item clicked at position: $position")
+        if (isFavourite) {
+            removeFromFavourites(book, position)
+        } else {
+            addToFavourites(book, position)
+        }
     }
 
-    private fun showRemoveConfirmationDialog(book: BookItem) {
+
+
+    private fun addToFavourites(book: BookItem, position: Int) {
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.apply {
             setTitle("Add to Favourites")
             setMessage("Are you sure you want to add this to Favourites ?")
             setPositiveButton("Yes") { _: DialogInterface, _: Int ->
+                val key = book.id
                 val bookData = mapOf(
                     "title" to book.volumeInfo.title,
                     "author" to (book.volumeInfo.authors?.joinToString(", ") ?: "Author Unknown"),
                     "image" to book.volumeInfo.imageLinks?.thumbnail
                 )
-                databaseReference.push().setValue(bookData)
+                databaseReference.child(key).setValue(bookData)
                 showToast("Book saved to Favourites Section")
-                //Toast.makeText(this, "Book saved to Favourites Section", Toast.LENGTH_SHORT).show()
+                val viewHolder: RecyclerView.ViewHolder? = recyclerView.findViewHolderForAdapterPosition(position)
+                if (viewHolder != null && viewHolder is BooksAdapter.BookViewHolder) {
+                    viewHolder.buttonFavourites.text = "Remove from Favourites"
+                    viewHolder.buttonFavourites.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.red))
+                    booksAdapter.notifyItemChanged(position)
+                }
             }
             setNegativeButton("No") { dialog: DialogInterface, _: Int ->
+                val viewHolder: RecyclerView.ViewHolder? = recyclerView.findViewHolderForAdapterPosition(position)
+                if (viewHolder != null && viewHolder is BooksAdapter.BookViewHolder) {
+                    viewHolder.buttonFavourites.text = "Add to Favourites"
+                    viewHolder.buttonFavourites.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.colorPrimaryVariant))
+                    booksAdapter.notifyItemChanged(position)
+                }
                 dialog.dismiss()
             }
             create().show()
         }
-
     }
+
+    private fun removeFromFavourites(book: BookItem, position: Int) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.apply {
+            setTitle("Remove from Favourites")
+            setMessage("Are you sure you want to remove this from Favourites ?")
+            setPositiveButton("Yes") { _: DialogInterface, _: Int ->
+                val key = book.id
+                databaseReference.child(key).removeValue()
+                showToast("Book removed from Favourites Section")
+
+                val viewHolder: RecyclerView.ViewHolder? = recyclerView.findViewHolderForAdapterPosition(position)
+                if (viewHolder != null && viewHolder is BooksAdapter.BookViewHolder) {
+                    viewHolder.buttonFavourites.text = "Add to Favourites"
+                    viewHolder.buttonFavourites.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.colorPrimaryVariant))
+
+                    booksAdapter.notifyItemChanged(position)
+                }
+            }
+            setNegativeButton("No") { dialog: DialogInterface, _: Int ->
+                val viewHolder: RecyclerView.ViewHolder? = recyclerView.findViewHolderForAdapterPosition(position)
+                if (viewHolder != null && viewHolder is BooksAdapter.BookViewHolder) {
+                    viewHolder.buttonFavourites.text = "Remove from Favourites"
+                    viewHolder.buttonFavourites.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.red))
+
+                    booksAdapter.notifyItemChanged(position)
+                }
+                dialog.dismiss()
+            }
+            create().show()
+        }
+    }
+
     private fun showToast(message: String) {
         val inflater = layoutInflater
         val layout: View = inflater.inflate(R.layout.custom_toast_layout, findViewById(R.id.custom_toast_layout_root))
@@ -152,4 +215,10 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
         toast.view = layout
         toast.show()
     }
+
+    override fun onResume() {
+        super.onResume()
+        booksAdapter.updateDataset(mutableBookItems)
+    }
+
 }

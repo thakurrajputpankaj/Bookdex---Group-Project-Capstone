@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.pankaj.bookdex_capstone.R
 import android.content.Context
+import androidx.core.content.ContextCompat
 
 class FavouritesAdapter(
     private var favourites: MutableList<Favourite>,
@@ -59,6 +60,7 @@ class FavouritesAdapter(
             holder.textViewAuthor.text = favourite.author
             holder.imageViewThumbnail.visibility = View.VISIBLE
             holder.buttonRemove.visibility = View.VISIBLE
+            holder.buttonRemove.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.red))
 
             Picasso.get()
                 .load(favourite.image)
