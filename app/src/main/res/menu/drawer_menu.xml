@@ -1,4 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
     <item
         android:id="@+id/nav_favourites"
         android:title="Favourites"
@@ -9,4 +12,10 @@
         android:id="@+id/nav_notification"
         android:title="Notifications"
         android:clickable="true" />
+
+    <item
+        android:id="@+id/nav_theme"
+        android:title="Toggle Theme"
+        android:clickable="true" />
+
 </menu>

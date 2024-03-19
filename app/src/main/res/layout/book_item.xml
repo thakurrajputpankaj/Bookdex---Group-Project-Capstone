@@ -54,6 +54,12 @@
 
     </LinearLayout>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonReading"
+            android:text="Add to Reading List"
+            />
 
         <Button
             android:layout_width="match_parent"

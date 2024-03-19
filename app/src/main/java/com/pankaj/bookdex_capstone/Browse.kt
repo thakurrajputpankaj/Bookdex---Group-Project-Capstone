@@ -3,6 +3,7 @@ package com.pankaj.bookdex_capstone
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -27,12 +28,15 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var databaseReference: DatabaseReference
     private lateinit var rootReference: DatabaseReference
+
+    private lateinit var databaseReferenceReading: DatabaseReference
 
     private lateinit var search: ImageView
     private lateinit var search_edittext: EditText
@@ -63,6 +67,7 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
         }
 
         databaseReference = FirebaseDatabase.getInstance().reference.child("favourites")
+        databaseReferenceReading = FirebaseDatabase.getInstance().reference.child("currentlyReading")
 
 
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -82,6 +87,12 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
                     drawerLayout.closeDrawer(GravityCompat.START)
                     true
                 }
+                R.id.nav_theme -> {
+                    toggleTheme()
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
+
                 else -> false
             }
         }
@@ -127,7 +138,7 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
     }
 
 
-    override fun onItemClick(book: BookItem, isFavourite: Boolean, position: Int) {
+    override fun onFavouriteClick(book: BookItem, isFavourite: Boolean, position: Int) {
         //Log.d("Browse", "Item clicked at position: $position")
         if (isFavourite) {
             removeFromFavourites(book, position)
@@ -136,7 +147,95 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
         }
     }
 
+    override fun onReadingClick(book: BookItem, isReading: Boolean, position: Int) {
+        //Log.d("Browse", "Item clicked at position: $position")
+        if (isReading) {
+            //removeFromReadings(book, position)
+        } else {
+            addToReadings(book, position)
+        }
+    }
 
+
+    private fun addToReadings(book: BookItem, position: Int) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.apply {
+            setTitle("Add to Reading Section")
+            setMessage("Are you sure you want to add this to Reading Section ?")
+            setPositiveButton("Yes") { _: DialogInterface, _: Int ->
+                val key = book.id
+                val bookData = mapOf(
+                    "title" to book.volumeInfo.title,
+                    "author" to (book.volumeInfo.authors?.joinToString(", ") ?: "Author Unknown"),
+                    "image" to book.volumeInfo.imageLinks?.thumbnail,
+                    "pagesRead" to 0,
+                    "pageCount" to book.volumeInfo.pageCount
+                )
+                databaseReferenceReading.child(key).setValue(bookData)
+                showToast("Book saved to Reading Section")
+                val viewHolder: RecyclerView.ViewHolder? =
+                    recyclerView.findViewHolderForAdapterPosition(position)
+                if (viewHolder != null && viewHolder is BooksAdapter.BookViewHolder) {
+                    viewHolder.buttonFavourites.text = "Remove from Reading Section"
+                    viewHolder.buttonFavourites.setBackgroundColor(
+                        ContextCompat.getColor(
+                            viewHolder.itemView.context,
+                            R.color.red
+                        )
+                    )
+                    booksAdapter.notifyItemChanged(position)
+                }
+            }
+            setNegativeButton("No") { dialog: DialogInterface, _: Int ->
+                val viewHolder: RecyclerView.ViewHolder? =
+                    recyclerView.findViewHolderForAdapterPosition(position)
+                if (viewHolder != null && viewHolder is BooksAdapter.BookViewHolder) {
+                    viewHolder.buttonFavourites.text = "Add to Favourites"
+                    viewHolder.buttonFavourites.setBackgroundColor(
+                        ContextCompat.getColor(
+                            viewHolder.itemView.context,
+                            R.color.colorPrimaryVariant
+                        )
+                    )
+                    booksAdapter.notifyItemChanged(position)
+                }
+                dialog.dismiss()
+            }
+            create().show()
+        }
+    }
+
+    private fun removeFromReadings(book: BookItem, position: Int) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.apply {
+            setTitle("Remove from Reading Section")
+            setMessage("Are you sure you want to remove this from Reading Section ?")
+            setPositiveButton("Yes") { _: DialogInterface, _: Int ->
+                val key = book.id
+                databaseReferenceReading.child(key).removeValue()
+                showToast("Book removed from Reading Section")
+
+                val viewHolder: RecyclerView.ViewHolder? = recyclerView.findViewHolderForAdapterPosition(position)
+                if (viewHolder != null && viewHolder is BooksAdapter.BookViewHolder) {
+                    viewHolder.buttonFavourites.text = "Add to Reading Section"
+                    viewHolder.buttonFavourites.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.colorPrimaryVariant))
+
+                    booksAdapter.notifyItemChanged(position)
+                }
+            }
+            setNegativeButton("No") { dialog: DialogInterface, _: Int ->
+                val viewHolder: RecyclerView.ViewHolder? = recyclerView.findViewHolderForAdapterPosition(position)
+                if (viewHolder != null && viewHolder is BooksAdapter.BookViewHolder) {
+                    viewHolder.buttonFavourites.text = "Remove from Reading Section"
+                    viewHolder.buttonFavourites.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.red))
+
+                    booksAdapter.notifyItemChanged(position)
+                }
+                dialog.dismiss()
+            }
+            create().show()
+        }
+    }
 
     private fun addToFavourites(book: BookItem, position: Int) {
         val alertDialogBuilder = AlertDialog.Builder(this)
@@ -220,5 +319,20 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
         super.onResume()
         booksAdapter.updateDataset(mutableBookItems)
     }
+
+    private fun toggleTheme() {
+        val currentNightMode = AppCompatDelegate.getDefaultNightMode()
+        val newNightMode = if (currentNightMode == AppCompatDelegate.MODE_NIGHT_YES) {
+            AppCompatDelegate.MODE_NIGHT_NO
+        } else {
+            AppCompatDelegate.MODE_NIGHT_YES
+        }
+        AppCompatDelegate.setDefaultNightMode(newNightMode)
+
+        recreate()
+    }
+
+
+
 
 }

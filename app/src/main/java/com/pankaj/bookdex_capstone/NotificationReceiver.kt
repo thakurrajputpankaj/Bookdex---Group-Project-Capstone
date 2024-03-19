@@ -1,19 +1,17 @@
 package com.pankaj.bookdex_capstone
 
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import java.util.*
 
 class NotificationReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == "ACTION_TRIGGER_NOTIFICATION") {
-            buildNotification(context)
-        } else {
             buildNotification(context)
         }
     }
@@ -36,6 +34,8 @@ class NotificationReceiver : BroadcastReceiver() {
             .setContentText("Do not forget to read your books !")
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
+
+        Toast.makeText(context, "Notification Triggered!", Toast.LENGTH_SHORT).show()
 
         notificationManager.notify(NOTIFICATION_ID, builder.build())
     }

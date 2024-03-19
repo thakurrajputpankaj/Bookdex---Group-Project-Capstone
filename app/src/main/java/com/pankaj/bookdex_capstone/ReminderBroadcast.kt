@@ -16,7 +16,7 @@ class ReminderBroadcast : BroadcastReceiver() {
         createNotificationChannel(notificationManager)
 
         val notificationBuilder = NotificationCompat.Builder(context, "remindToReadChannel")
-            .setSmallIcon(R.drawable.search_icon) // Set your own icon
+            .setSmallIcon(R.drawable.alarm) // Set your own icon
             .setContentTitle("Read Books Reminder")
             .setContentText("Remind to Read the books")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

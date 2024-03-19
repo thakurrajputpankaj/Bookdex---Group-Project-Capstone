@@ -23,8 +23,10 @@ class BooksAdapter(private val books: MutableList<BookItem>, private val listene
     RecyclerView.Adapter<BooksAdapter.BookViewHolder>() {
 
     interface OnItemClickListener {
-        fun onItemClick(book: BookItem, isFavourite: Boolean, position: Int)
+        fun onFavouriteClick(book: BookItem, isFavourite: Boolean, position: Int)
+        fun onReadingClick(book: BookItem, isReading: Boolean, position: Int)
     }
+
 
     class BookViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textViewTitle: TextView = view.findViewById(R.id.textViewTitle)
@@ -32,6 +34,8 @@ class BooksAdapter(private val books: MutableList<BookItem>, private val listene
         val imageViewThumbnail: ImageView = view.findViewById(R.id.imageViewThumbnail)
 
         val buttonFavourites: Button = view.findViewById(R.id.buttonFavourites)
+        val buttonReading: Button = view.findViewById(R.id.buttonReading)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
@@ -74,10 +78,32 @@ class BooksAdapter(private val books: MutableList<BookItem>, private val listene
                     }
 
                     holder.buttonFavourites.setOnClickListener {
-                        listener.onItemClick(books[position], isFavourite, position)
+                        listener.onFavouriteClick(books[position], isFavourite, position)
                     }
                 }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e(TAG, "Failed to read value.", error.toException())
+                }
+            })
 
+            databaseReference.child("currentlyReading").child(bookId).addListenerForSingleValueEvent(object :
+                ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val isReading = snapshot.exists()
+                    if (isReading) {
+                        holder.buttonReading.text = "Currently Reading"
+                        holder.buttonReading.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.light_green))
+
+                    } else {
+                        holder.buttonReading.text = "Add to Reading Section"
+                        holder.buttonReading.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.colorPrimaryVariant))
+
+                    }
+
+                    holder.buttonReading.setOnClickListener {
+                        listener.onReadingClick(books[position], isReading, position)
+                    }
+                }
                 override fun onCancelled(error: DatabaseError) {
                     Log.e(TAG, "Failed to read value.", error.toException())
                 }
