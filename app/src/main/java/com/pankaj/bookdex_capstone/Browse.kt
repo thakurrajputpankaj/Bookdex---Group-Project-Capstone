@@ -105,7 +105,12 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
                     drawerLayout.closeDrawer(GravityCompat.START)
                     true
                 }
-
+                R.id.nav_quotes -> {
+                    val intent = Intent(this, QuotesActivity::class.java)
+                    startActivity(intent)
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
                 else -> false
             }
         }

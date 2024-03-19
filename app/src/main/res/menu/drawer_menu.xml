@@ -28,6 +28,9 @@
         android:title="Statistics"
         android:clickable="true" />
 
-
+    <item
+        android:id="@+id/nav_quotes"
+        android:title="Quotes"
+        android:clickable="true" />
 
 </menu>
