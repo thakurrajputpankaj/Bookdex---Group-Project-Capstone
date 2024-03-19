@@ -93,11 +93,12 @@ class BooksAdapter(private val books: MutableList<BookItem>, private val listene
                     if (isReading) {
                         holder.buttonReading.text = "Currently Reading"
                         holder.buttonReading.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.light_green))
+                        holder.buttonReading.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.black))
 
                     } else {
                         holder.buttonReading.text = "Add to Reading Section"
                         holder.buttonReading.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.colorPrimaryVariant))
-
+                        holder.buttonReading.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.white))
                     }
 
                     holder.buttonReading.setOnClickListener {

@@ -16,6 +16,7 @@ class FavouritesActivity : AppCompatActivity() , FavouritesAdapter.OnItemClickLi
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var databaseReference: DatabaseReference
+    private lateinit var databaseReferenceStats: DatabaseReference
     private lateinit var adapter: FavouritesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +27,7 @@ class FavouritesActivity : AppCompatActivity() , FavouritesAdapter.OnItemClickLi
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         databaseReference = FirebaseDatabase.getInstance().reference.child("favourites")
-
+        databaseReferenceStats = FirebaseDatabase.getInstance().reference.child("stats")
         adapter = FavouritesAdapter(mutableListOf(), this, this)
 
         recyclerView.adapter = adapter
@@ -63,15 +64,34 @@ class FavouritesActivity : AppCompatActivity() , FavouritesAdapter.OnItemClickLi
 
     override fun onItemClick(favourite: Favourite) {
         val favouriteId = favourite.id
-        databaseReference.child(favouriteId).removeValue()
-            .addOnSuccessListener {
-                Toast.makeText(this, "Book removed from favourites", Toast.LENGTH_SHORT).show()
-                adapter.removeItemById(favouriteId)
-            }
-            .addOnFailureListener { exception ->
-                Log.e(TAG, "Error removing book from favourites", exception)
-                Toast.makeText(this, "Failed to remove book from favourites", Toast.LENGTH_SHORT).show()
-            }
+
+        databaseReferenceStats.child("favourites").get().addOnSuccessListener { dataSnapshot ->
+            val currentFavouritesCount = dataSnapshot.value as? Long ?: 0
+
+            val newFavouritesCount = currentFavouritesCount - 1
+
+            databaseReferenceStats.child("favourites").setValue(newFavouritesCount)
+                .addOnSuccessListener {
+
+                    databaseReference.child(favouriteId).removeValue()
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Book removed from favourites", Toast.LENGTH_SHORT).show()
+
+                            adapter.removeItemById(favouriteId)
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.e(TAG, "Error removing book from favourites", exception)
+                            Toast.makeText(this, "Failed to remove book from favourites", Toast.LENGTH_SHORT).show()
+                        }
+                }
+                .addOnFailureListener { exception ->
+                    Log.e(TAG, "Error updating favourites count", exception)
+                    Toast.makeText(this, "Failed to remove book from favourites", Toast.LENGTH_SHORT).show()
+                }
+        }.addOnFailureListener { exception ->
+            Log.e(TAG, "Error retrieving favourites count", exception)
+            Toast.makeText(this, "Failed to remove book from favourites", Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

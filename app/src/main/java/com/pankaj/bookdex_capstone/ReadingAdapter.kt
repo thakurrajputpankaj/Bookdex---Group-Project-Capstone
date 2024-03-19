@@ -26,6 +26,7 @@ class ReadingAdapter(
 
     interface OnItemClickListener {
         fun onItemClick(readings: Reading)
+        fun onItemReadComplete(readings: Reading)
     }
 
     inner class ReadingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -37,6 +38,8 @@ class ReadingAdapter(
         val rangeSlider: RangeSlider = view.findViewById(R.id.rangeSlider)
         val pagesCount: TextView = view.findViewById(R.id.pagesCount)
         val pagesRead: TextView = view.findViewById(R.id.pagesRead)
+        val buttonComplete: Button = view.findViewById(R.id.buttonComplete)
+
         init {
 
             rangeSlider.stepSize = 1f
@@ -54,8 +57,28 @@ class ReadingAdapter(
                 }
             }
 
+            buttonComplete.setOnClickListener {
 
+                databaseReferenceStats.child("stats").child("totalBooks").get().addOnSuccessListener { dataSnapshot ->
+                    val currentTotalBooksCount = dataSnapshot.value as? Long ?: 0
 
+                    val newTotalBooksCount = currentTotalBooksCount + 1
+
+                    databaseReferenceStats.child("stats").child("totalBooks").setValue(newTotalBooksCount)
+                        .addOnSuccessListener {
+                            val position = adapterPosition
+                            if (position != RecyclerView.NO_POSITION) {
+                                val favourite = readings[position]
+                                itemClickListener.onItemReadComplete(favourite)
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.e(TAG, "Error updating totalBooks count", exception)
+                        }
+                }.addOnFailureListener { exception ->
+                    Log.e(TAG, "Error retrieving totalBooks count", exception)
+                }
+            }
 
             buttonSave.setOnClickListener {
                 val position = adapterPosition

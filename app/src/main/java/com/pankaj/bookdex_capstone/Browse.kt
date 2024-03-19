@@ -1,5 +1,6 @@
 package com.pankaj.bookdex_capstone
 
+import android.content.ContentValues
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -98,6 +99,13 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
                     drawerLayout.closeDrawer(GravityCompat.START)
                     true
                 }
+                R.id.nav_stats -> {
+                    val intent = Intent(this, StatsActivity::class.java)
+                    startActivity(intent)
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
+
                 else -> false
             }
         }
@@ -181,13 +189,15 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
                 val viewHolder: RecyclerView.ViewHolder? =
                     recyclerView.findViewHolderForAdapterPosition(position)
                 if (viewHolder != null && viewHolder is BooksAdapter.BookViewHolder) {
-                    viewHolder.buttonFavourites.text = "Remove from Reading Section"
-                    viewHolder.buttonFavourites.setBackgroundColor(
+                    viewHolder.buttonReading.text = "Currently Reading"
+                    viewHolder.buttonReading.setBackgroundColor(
                         ContextCompat.getColor(
                             viewHolder.itemView.context,
-                            R.color.red
+                            R.color.light_green
                         )
                     )
+                    viewHolder.buttonReading.setTextColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.black))
+
                     booksAdapter.notifyItemChanged(position)
                 }
             }
@@ -195,13 +205,14 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
                 val viewHolder: RecyclerView.ViewHolder? =
                     recyclerView.findViewHolderForAdapterPosition(position)
                 if (viewHolder != null && viewHolder is BooksAdapter.BookViewHolder) {
-                    viewHolder.buttonFavourites.text = "Add to Favourites"
-                    viewHolder.buttonFavourites.setBackgroundColor(
+                    viewHolder.buttonReading.text = "Add to Reading Section"
+                    viewHolder.buttonReading.setBackgroundColor(
                         ContextCompat.getColor(
                             viewHolder.itemView.context,
                             R.color.colorPrimaryVariant
                         )
                     )
+                    viewHolder.buttonReading.setTextColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.white))
                     booksAdapter.notifyItemChanged(position)
                 }
                 dialog.dismiss()
@@ -255,6 +266,13 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
                     "image" to book.volumeInfo.imageLinks?.thumbnail
                 )
                 databaseReference.child(key).setValue(bookData)
+                val statsManager = StatsManager(rootReference)
+                statsManager.updateFavouritesCount { currentCount ->
+                    currentCount + 1
+                }.addOnSuccessListener {
+                }.addOnFailureListener { exception ->
+                    Log.e(ContentValues.TAG, "Failed to update favourites count", exception)
+                }
                 showToast("Book saved to Favourites Section")
                 val viewHolder: RecyclerView.ViewHolder? = recyclerView.findViewHolderForAdapterPosition(position)
                 if (viewHolder != null && viewHolder is BooksAdapter.BookViewHolder) {
@@ -285,6 +303,14 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
                 val key = book.id
                 databaseReference.child(key).removeValue()
                 showToast("Book removed from Favourites Section")
+
+                val statsManager = StatsManager(rootReference)
+                statsManager.updateFavouritesCount { currentCount ->
+                    currentCount - 1
+                }.addOnSuccessListener {
+                }.addOnFailureListener { exception ->
+                    Log.e(ContentValues.TAG, "Failed to update favourites count", exception)
+                }
 
                 val viewHolder: RecyclerView.ViewHolder? = recyclerView.findViewHolderForAdapterPosition(position)
                 if (viewHolder != null && viewHolder is BooksAdapter.BookViewHolder) {

@@ -92,5 +92,30 @@ class CurrentlyReading : AppCompatActivity() , ReadingAdapter.OnItemClickListene
         alertDialog.show()
     }
 
+    override fun onItemReadComplete(readings: Reading) {
+        val alertDialog = AlertDialog.Builder(this)
+            .setTitle("Read the Complete Book ?")
+            .setMessage("This Book will be removed for this section")
+            .setPositiveButton("Yes") { dialog, _ ->
+                val readngId = readings.id
+                databaseReference.child(readngId).removeValue()
+                    .addOnSuccessListener {
+                        //Toast.makeText(this, "Book removed from Currently Reading Section", Toast.LENGTH_SHORT).show()
+                        adapter.removeItemById(readngId)
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e(TAG, "Error removing book from Currently Reading Section", exception)
+                        //Toast.makeText(this, "Failed to remove book from Currently Reading Section", Toast.LENGTH_SHORT).show()
+                    }
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+
+        alertDialog.show()
+    }
+
 
 }

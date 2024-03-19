@@ -91,6 +91,13 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/buttonComplete"
+            android:text="Mark as read"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/buttonRemove"
             android:text="Remove"
             />
