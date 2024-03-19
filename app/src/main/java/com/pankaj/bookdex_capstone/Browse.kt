@@ -92,7 +92,12 @@ class Browse : AppCompatActivity(), BooksAdapter.OnItemClickListener {
                     drawerLayout.closeDrawer(GravityCompat.START)
                     true
                 }
-
+                R.id.nav_currently -> {
+                    val intent = Intent(this, CurrentlyReading::class.java)
+                    startActivity(intent)
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
                 else -> false
             }
         }

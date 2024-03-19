@@ -18,4 +18,9 @@
         android:title="Toggle Theme"
         android:clickable="true" />
 
+    <item
+        android:id="@+id/nav_currently"
+        android:title="Currently Reading"
+        android:clickable="true" />
+
 </menu>
