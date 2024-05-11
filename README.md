@@ -59,12 +59,4 @@ Welcome to Bookdex, your go-to app for managing and enjoying your book collectio
 
 We welcome contributions! Feel free to fork the repository and submit pull requests with any improvements or features you'd like to add.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-Special thanks to the INFO-6134 Capstone Project team for their dedication and hard work in bringing Bookdex to life!
-
 ---
