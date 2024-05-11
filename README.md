@@ -47,9 +47,7 @@ Welcome to Bookdex, your go-to app for managing and enjoying your book collectio
 
 ## Technologies Used
 
-- **Frontend:** HTML, CSS, JavaScript
-- **Backend:** Firebase (for favorites storage)
-- **APIs:** Google Books API (for book data), External API (for quotes)
+- Android Studio, Kotlin, Retrofit, JSON, Firebase
 
 ## Getting Started
 
