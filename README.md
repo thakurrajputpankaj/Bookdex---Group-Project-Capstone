@@ -1,44 +1,72 @@
 # Bookdex - Group Project Capstone
 
+## YouTube Video
+
+[Watch Bookdex in Action!](https://youtu.be/hCaR_O8Cj2g)
+
 ## INFO-6134 Capstone Project Files
 
 **FOL Group Name:** Group 4
 
 **Group Members and Student ID:**
-1. **Name:** Shishir Poudel  
+1. **Shishir Poudel**  
    **Student ID:** 1176504
 
-2. **Name:** Pankaj (Team Leader)  
+2. **Pankaj (Team Leader)**  
    **Student ID:** 1174544
 
-**Name of the app:** Bookdex
+## Introduction
 
-**Brief Description:** 
-BookDex: A user-friendly app for managing your book collection. Easily explore, organize, and enjoy your favorite reads in one convenient platform.
+Welcome to Bookdex, your go-to app for managing and enjoying your book collection! With Bookdex, you can effortlessly explore, organize, and dive into your favorite reads all in one convenient platform.
 
-**Features of Our App:**
-1. **Browse Books:**
-   Explore a diverse collection of books directly from the app. The app uses Google Books Api for getting the list of Books.
+## Features
 
-2. **Favourites a book:**
-   Create and manage a Favourites section of books. The uses Firebase database to store the details of the favourite books.
+1. **Browse Books:**  
+   Explore a wide range of books directly from the app, powered by the Google Books API.
 
-3. **Searching Books:**
-   Easily find specific books by searching the book's name in the search bar
-   
-4. **Displaying the Stats of users's activity in the app:**
-   App displays users' number of favourite books, number of pages that user has read, number of books he has read till now.
+2. **Favorites:**  
+   Easily create and manage a favorites section for your most cherished books. Book details are securely stored using Firebase.
 
-5. **Notifications:**
-   Add Daily reminders of the books reading.
+3. **Search Books:**  
+   Quickly find specific books by searching their titles using the search bar.
 
-6. **Dark Mode:**
-   App uses dark mode
+4. **Activity Stats:**  
+   Keep track of your reading activity, including the number of favorite books, pages read, and total books completed.
 
-7. **Currently Reading:**
-   User can add the book to currently reading section where he can change the number of pages.
+5. **Notifications:**  
+   Set up daily reminders to keep your reading habits on track.
 
-8. **Daily Book Quotes:**
-   The app uses API to fetch random quotes related to books, reading habits.
-   
+6. **Dark Mode:**  
+   Enjoy reading in low-light environments with the app's dark mode feature.
+
+7. **Currently Reading:**  
+   Organize your reading list with a "currently reading" section, complete with page tracking.
+
+8. **Daily Book Quotes:**  
+   Get inspired with daily book-related quotes fetched from an external API.
+
+## Technologies Used
+
+- **Frontend:** HTML, CSS, JavaScript
+- **Backend:** Firebase (for favorites storage)
+- **APIs:** Google Books API (for book data), External API (for quotes)
+
+## Getting Started
+
+1. Clone the repository.
+2. Set up Firebase for backend services.
+3. Run the app locally or deploy it to your preferred hosting platform.
+
+## Contributing
+
+We welcome contributions! Feel free to fork the repository and submit pull requests with any improvements or features you'd like to add.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+Special thanks to the INFO-6134 Capstone Project team for their dedication and hard work in bringing Bookdex to life!
+
 ---
