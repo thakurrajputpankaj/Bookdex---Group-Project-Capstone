@@ -1,8 +1,11 @@
 # Bookdex - Group Project Capstone
 
-## YouTube Video
+## Youtube Link
 
 [Youtube Link !](https://youtu.be/hCaR_O8Cj2g)
+
+## Google Play Link
+
 [Google Play Store Link !]([https://youtu.be/hCaR_O8Cj2g](https://play.google.com/store/apps/details?id=com.pankaj.bookdex_capstone))
 
 ## INFO-6134 Capstone Project Files
