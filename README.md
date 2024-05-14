@@ -6,7 +6,7 @@
 
 ## Google Play Link
 
-[Google Play Store Link !](https://play.google.com/store/apps/details?id=com.pankaj.bookdex_capstone))
+[Google Play Store Link !](https://play.google.com/store/apps/details?id=com.pankaj.bookdex_capstone)
 
 ## INFO-6134 Capstone Project Files
 
